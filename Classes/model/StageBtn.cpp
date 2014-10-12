@@ -32,7 +32,9 @@ bool StageBtn::init(const std::string& planet_name, const ccMenuCallback& callba
 	return false;
 }
 
-StageBtn::StageBtn() {
+StageBtn::StageBtn():
+star_num_(0)
+{
 }
 
 StageBtn::~StageBtn() {

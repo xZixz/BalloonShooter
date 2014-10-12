@@ -284,4 +284,6 @@ To enable set it to a value different than 0. Disabled by default.
 #define CC_CONSTRUCTOR_ACCESS protected
 #endif
 
+#define COCOS2D_DEBUG 1
+
 #endif // __CCCONFIG_H__

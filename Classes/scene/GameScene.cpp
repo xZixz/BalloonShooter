@@ -619,6 +619,7 @@ void GameScene::showWinGame(){
 	if (star_num > stage_info->getNo()){
 		stage_info->setStarNum(star_num);
 		stage_info->updateStageInfo();
+		log("Update stage info");
 	}
 	Stage next_stage = stage_;
 	next_stage.no_ ++;

@@ -50,8 +50,8 @@ const char* StageInfo::getInsertQuery(){
 
 const char* StageInfo::getUpdateQuery(){
 	return __String::createWithFormat("UPDATE %s"
-										" SET %s = '%s', %s = %d, %s = %d",
-										STAGE_TABLE_NAME,PLANET_NAME_KEY,name_.c_str(),NO_KEY,no_,STAR_NUM_KEY,star_num_)->getCString();
+										" SET %s = '%s', %s = %d, %s = %d WHERE %s = %d",
+										STAGE_TABLE_NAME,PLANET_NAME_KEY,name_.c_str(),NO_KEY,no_,STAR_NUM_KEY,star_num_,NO_KEY,no_)->getCString();
 }
 
 const char* StageInfo::getDeleteQuery(){

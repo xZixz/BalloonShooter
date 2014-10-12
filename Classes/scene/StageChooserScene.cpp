@@ -94,6 +94,7 @@ bool StageChooserScene::init(const std::string& planet_name){
 					log("getting stage info");
 					StageInfo* tmp_info = (StageInfo*) stage_info_list.at(j);
 					log("get stage info done");
+					log("no of tmp_info: %d",tmp_info->getNo());
 					if (tmp_info->getNo() == (i+1)){
 						stage_info = tmp_info;
 						log("found stage info");
