@@ -22,6 +22,9 @@ public:
 
 	Slot();
 	virtual ~Slot();
+
+	bool hasBall();
+
 	Ball* ball_;
 	Vec2 pos_;
 	int row_index_;

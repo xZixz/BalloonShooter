@@ -17,6 +17,7 @@
 #define RED_BALL_NAME "red"
 #define YELLOW_BALL_NAME "yellow"
 #define NULL_BALL_NAME "n0"
+#define KEY_BALL_NAME "key"
 
 #include "cocos2d.h"
 
@@ -27,12 +28,14 @@ public:
 
 	static BallManager* getInstance();
 	virtual void selfInit();
-	std::vector<std::string> get_available_ball_list_by_stage_index(int index);
+	virtual void initialize_unshotable_ball_list();
+	virtual bool isUnshotable(std::string);
+	virtual std::vector<std::string> getUnshotableBallList();
 
 	BallManager();
 	virtual ~BallManager();
 protected:
-	std::vector<std::vector<std::string>> available_ball_stage_list_;
+	std::vector<std::string> unshotable_ball_list_;
 };
 
 #endif /* BALLMANAGER_H_ */

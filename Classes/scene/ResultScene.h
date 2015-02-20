@@ -5,19 +5,21 @@
  *      Author: dudu
  */
 
-#include "cocos2d.h"
-
-USING_NS_CC;
 
 #ifndef RESULTSCENE_H_
 #define RESULTSCENE_H_
 
+#include "cocos2d.h"
+#include "../manager/StageManager.h"
+
+USING_NS_CC;
+
 class ResultScene : public Layer {
 public:
 
-	static Scene* createScene(bool is_win, int score, int star_num);
-	static ResultScene* create(bool is_win, int score, int star_num);
-	virtual bool init(bool is_win, int score, int star_num);
+	static Scene* createScene(bool is_win, int score, int star_num, Stage current_stage);
+	static ResultScene* create(bool is_win, int score, int star_num, Stage current_stage);
+	virtual bool init(bool is_win, int score, int star_num, Stage current_stage);
 
 	virtual void btnCallback(Ref*);
 
@@ -27,6 +29,7 @@ protected:
 	bool is_win_;
 	int score_;
 	int star_num_;
+	Stage current_stage_;
 };
 
 #endif /* RESULTSCENE_H_ */

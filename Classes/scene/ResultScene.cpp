@@ -5,8 +5,10 @@
  *      Author: dudu
  */
 
-#include "ResultScene.h"
+#include "GameScene.h"
 #include "MainMenuScene.h"
+#include "ResultScene.h"
+#include "../GameConstants.h"
 
 #define RESULT_BG_ZORDER 1
 #define YOU_WIN_TEXT_ZORDER 2
@@ -23,7 +25,7 @@
 #define WIN_RETRY_LEVEL_BTN_POS Vec2(472,440)
 #define FAILED_RETRY_LEVEL_BTN_POS Vec2(685,688)
 #define SCORE_BASE_POS Vec2(478,948)
-#define SCORE_TEXT_POS Vec2(414,951)
+#define SCORE_TEXT_POS Vec2(179,44)
 #define STAR_1_POS Vec2(304,1150)
 #define STAR_2_POS Vec2(478,1211)
 #define STAR_3_POS Vec2(648,1150)
@@ -32,16 +34,16 @@
 #define NEXT_LEVEL_BTN_TAG 11
 #define RETRY_LEVEL_BTN_TAG 12
 
-Scene* ResultScene::createScene(bool is_win, int score, int star_num){
+Scene* ResultScene::createScene(bool is_win, int score, int star_num, Stage current_stage){
 	Scene* scene = Scene::create();
-	ResultScene* layer = ResultScene::create(is_win,score,star_num);
+	ResultScene* layer = ResultScene::create(is_win,score,star_num, current_stage);
 	scene->addChild(layer);
 	return scene;
 }
 
-ResultScene* ResultScene::create(bool is_win, int score, int star_num){
+ResultScene* ResultScene::create(bool is_win, int score, int star_num, Stage current_stage){
 	ResultScene* resultScene = new ResultScene();
-	if (resultScene && resultScene->init(is_win,score,star_num)){
+	if (resultScene && resultScene->init(is_win,score,star_num, current_stage)){
 		resultScene->autorelease();
 		return resultScene;
 	}
@@ -49,11 +51,12 @@ ResultScene* ResultScene::create(bool is_win, int score, int star_num){
 	return nullptr;
 }
 
-bool ResultScene::init(bool is_win, int score, int star_num){
+bool ResultScene::init(bool is_win, int score, int star_num, Stage current_stage){
 	if (Layer::init()){
 		is_win_ = is_win;
 		score_ = score;
 		star_num_ = star_num;
+		current_stage_ = current_stage;
 
 		Size winsize = Director::getInstance()->getWinSize();
 
@@ -78,39 +81,48 @@ bool ResultScene::init(bool is_win, int score, int star_num){
 		score_base_sprite->setPosition(SCORE_BASE_POS);
 		addChild(score_base_sprite,SCORE_BASE_ZORDER);
 
-//		Label* score_text = Label::createWithTTF("0","Marker Felt.ttf",30);
-//		score_text->setAnchorPoint(Vec2(0.0f,0.5f));
-//		score_text->setPosition(SCORE_TEXT_POS);
+		Label* score_text = Label::create("0","Arial",40);
+		score_text->setPosition(SCORE_TEXT_POS);
+		score_base_sprite->addChild(score_text);
+		score_text->setString(std::to_string(score_));
 //		addChild(score_text,SCORE_TEXT_ZORDER);
 
 		Sprite* star_1_sprite = Sprite::create("result_star_bg.png");
 		star_1_sprite->setPosition(STAR_1_POS);
 		addChild(star_1_sprite,STAR_BG_ZORDER);
 
-		if (star_num_ >= 1){
-			Sprite* star = Sprite::create("result_star.png");
-			star->setPosition(star_1_sprite->getContentSize()/2);
-			star_1_sprite->addChild(star);
-		}
-
 		Sprite* star_2_sprite = Sprite::create("result_star_bg.png");
 		star_2_sprite->setPosition(STAR_2_POS);
 		addChild(star_2_sprite,STAR_BG_ZORDER);
-
-		if (star_num_ >= 2){
-			Sprite* star = Sprite::create("result_star.png");
-			star->setPosition(star_2_sprite->getContentSize()/2);
-			star_2_sprite->addChild(star);
-		}
 
 		Sprite* star_3_sprite = Sprite::create("result_star_bg.png");
 		star_3_sprite->setPosition(STAR_3_POS);
 		addChild(star_3_sprite,STAR_BG_ZORDER);
 
-		if (star_num_ >= 3){
-			Sprite* star = Sprite::create("result_star.png");
-			star->setPosition(star_3_sprite->getContentSize()/2);
-			star_3_sprite->addChild(star);
+		if (is_win_){
+			if (star_num_ >= 1){
+				Sprite* star = Sprite::create("result_star.png");
+				star->setPosition(star_1_sprite->getContentSize()/2);
+				star_1_sprite->addChild(star);
+				star->setScale(0.0f);
+				star->runAction(ScaleTo::create(1.0f,1.0f));
+			}
+
+			if (star_num_ >= 2){
+				Sprite* star = Sprite::create("result_star.png");
+				star->setPosition(star_2_sprite->getContentSize()/2);
+				star_2_sprite->addChild(star);
+				star->setScale(0.0f);
+				star->runAction(Sequence::create(DelayTime::create(1.0f),ScaleTo::create(1.0f,1.0f),nullptr));
+			}
+
+			if (star_num_ >= 3){
+				Sprite* star = Sprite::create("result_star.png");
+				star->setPosition(star_3_sprite->getContentSize()/2);
+				star_3_sprite->addChild(star);
+				star->setScale(0.0f);
+				star->runAction(Sequence::create(DelayTime::create(2.0f),ScaleTo::create(1.0f,1.0f),nullptr));
+			}
 		}
 
 		// Win result
@@ -149,10 +161,18 @@ void ResultScene::btnCallback(Ref* sender){
 			Director::getInstance()->replaceScene(MainMenuScene::createScene());
 			break;
 		case NEXT_LEVEL_BTN_TAG:
-
+			{
+				Stage next_stage = current_stage_;
+				next_stage.no_ ++;
+				if (next_stage.no_ > TOTAL_STAGE_PER_PLANET){
+					next_stage.no_ = 1;
+					next_stage.planet_name_ = StageManager::getInstance()->getNextPlanetName(next_stage.planet_name_);
+				}
+				Director::getInstance()->replaceScene(GameScene::createScene(next_stage));
+			}
 			break;
 		case RETRY_LEVEL_BTN_TAG:
-
+			Director::getInstance()->replaceScene(GameScene::createScene(current_stage_));
 			break;
 		default:
 			break;

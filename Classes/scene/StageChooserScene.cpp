@@ -8,6 +8,7 @@
 #include "StageChooserScene.h"
 #include "../manager/StageManager.h"
 #include "../model/StageBtn.h"
+#include "../GameConstants.h"
 #include "GameScene.h"
 #include "UniverseScene.h"
 
@@ -22,7 +23,6 @@
 #define STAR_COUNT_BASE_ZORDER 3
 
 #define ROW_NUM 4
-#define TOTAL_STAGE 16
 #define ROW_SPACE 40
 #define COLUMN_SPACE 70
 #define TOP_DISTANCE_TO_STAGE_LIST 315
@@ -67,12 +67,11 @@ bool StageChooserScene::init(const std::string& planet_name){
 		addChild(star_count_base_sprite,STAR_COUNT_BASE_ZORDER);
 
 		std::vector<StageInfo*> stage_info_list = StageManager::getInstance()->getStageInfosByName(planet_name_);
-		log("stage_info_list size: %ld", stage_info_list.size());
 
-		int total_star = 3 * TOTAL_STAGE;
+		int total_star = 3 * TOTAL_STAGE_PER_PLANET;
 		int current_star = 0;
 		for (StageInfo* stage_info : stage_info_list){
-			current_star = stage_info->getStarNum();
+			current_star += stage_info->getStarNum();
 		}
 
 		char tmp_char[20];
@@ -85,31 +84,22 @@ bool StageChooserScene::init(const std::string& planet_name){
 		menu->setPosition(Vec2::ZERO);
 		addChild(menu,STAGE_ICON_MENU_ZORDER);
 
-		for (int i = 0; i < TOTAL_STAGE; i ++){
+		for (int i = 0; i < TOTAL_STAGE_PER_PLANET; i ++){
 			StageInfo* stage_info = nullptr;
 			StageBtn* btn = nullptr;
-				log("start create available btn");
 			if (i < stage_info_list.size()){
 				for (int j = 0; j < stage_info_list.size(); j++){
-					log("getting stage info");
 					StageInfo* tmp_info = (StageInfo*) stage_info_list.at(j);
-					log("get stage info done");
-					log("no of tmp_info: %d",tmp_info->getNo());
 					if (tmp_info->getNo() == (i+1)){
 						stage_info = tmp_info;
-						log("found stage info");
 						break;
 					}
 				}
-				log("done searching");
 				btn = StageBtn::create(planet_name_,CC_CALLBACK_1(StageChooserScene::stageBtnCallback,this),stage_info->getStarNum());
 				btn->setTag(i+1);
-				log("avaible btn created");
 			} else {
-				log("start create disable btn");
 				btn = StageBtn::create(planet_name_,CC_CALLBACK_1(StageChooserScene::stageBtnCallback,this),0);
 				btn->setEnabled(false);
-				log("disable btn created");
 			}
 			int row_index = i % 4;
 			int column_index = i / 4;
@@ -128,7 +118,8 @@ bool StageChooserScene::init(const std::string& planet_name){
 
 void StageChooserScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* unusedEvent){
 	if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE){
-		Director::getInstance()->replaceScene(UniverseScene::createScene());
+		TransitionFade* white_fade_transition = TransitionFade::create(1.0f,UniverseScene::createScene(), Color3B::WHITE);
+		Director::getInstance()->replaceScene(white_fade_transition);
 	}
 }
 
@@ -138,7 +129,8 @@ void StageChooserScene::stageBtnCallback(Ref* sender){
 	Stage stage;
 	stage.planet_name_ = planet_name_;
 	stage.no_ = tag;
-	Director::getInstance()->replaceScene(GameScene::createScene(stage));
+	TransitionFade* white_fade_transition = TransitionFade::create(1.0f,GameScene::createScene(stage), Color3B::WHITE);
+	Director::getInstance()->replaceScene(white_fade_transition);
 }
 
 StageChooserScene::StageChooserScene() {

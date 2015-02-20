@@ -20,14 +20,24 @@ BallManager* BallManager::getInstance(){
 }
 
 void BallManager::selfInit(){
-	std::vector<std::string> balls_stage_1;
-	balls_stage_1.push_back(GREEN_BALL_NAME);
-	balls_stage_1.push_back(RED_BALL_NAME);
-	available_ball_stage_list_.push_back(balls_stage_1);
+	initialize_unshotable_ball_list();
 }
 
-std::vector<std::string> BallManager::get_available_ball_list_by_stage_index(int index){
-	return (std::vector<std::string>)available_ball_stage_list_.at(index-1);
+void BallManager::initialize_unshotable_ball_list(){
+	unshotable_ball_list_.push_back(KEY_BALL_NAME);
+}
+
+bool BallManager::isUnshotable(std::string ball_name){
+	for (std::string unshotable_ball_name : unshotable_ball_list_){
+		if (!unshotable_ball_name.compare(ball_name)){
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<std::string> BallManager::getUnshotableBallList(){
+	return unshotable_ball_list_;
 }
 
 BallManager::BallManager() {

@@ -23,6 +23,13 @@ bool Slot::init(Ball* ball, Vec2 pos){
 	return true;
 }
 
+bool Slot::hasBall(){
+	if (ball_ != nullptr){
+		return true;
+	}
+	return false;
+}
+
 Slot::Slot():
 ball_(nullptr),
 pos_(Vec2::ZERO),

@@ -168,7 +168,8 @@ bool UniverseScene::init(){
 
 void UniverseScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* unusedEvent){
 	if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE){
-		Director::getInstance()->replaceScene(MainMenuScene::createScene());
+		TransitionFade* white_fade_transition = TransitionFade::create(1.0f, MainMenuScene::createScene(), Color3B::WHITE);
+		Director::getInstance()->replaceScene(white_fade_transition);
 	}
 }
 
@@ -176,7 +177,10 @@ void UniverseScene::btnCallback(Ref* sender){
 	int tag = ((MenuItem*)sender)->getTag();
 	switch (tag){
 	case MOON_BTN_TAG:
-		Director::getInstance()->replaceScene(StageChooserScene::createScene(MOON_NAME));
+		{
+			TransitionFade* white_fade_transition = TransitionFade::create(1.0f,StageChooserScene::createScene(MOON_NAME), Color3B::WHITE);
+			Director::getInstance()->replaceScene(white_fade_transition);
+		}
 		break;
 	case VENUS_BTN_TAG:
 		break;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>BalloonShooter</name>
+	<name>NextGenShooter</name>
 	<comment></comment>
 	<projects>
 		<project>libcocos2dx</project>
@@ -112,6 +112,11 @@
 			<name>Classes</name>
 			<type>2</type>
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/Classes</locationURI>
+		</link>
+		<link>
+			<name>Resources</name>
+			<type>2</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/Resources</locationURI>
 		</link>
 		<link>
 			<name>cocos2d</name>

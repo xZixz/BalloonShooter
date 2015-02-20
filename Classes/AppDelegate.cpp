@@ -22,7 +22,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
 
-    glview->setDesignResolutionSize(960, 1600, ResolutionPolicy::EXACT_FIT);
+//    glview->setDesignResolutionSize(960, 1600, ResolutionPolicy::EXACT_FIT);
+    glview->setDesignResolutionSize(WIDTH_RES, HEIGHT_RES, ResolutionPolicy::SHOW_ALL);
 
     // turn on display FPS
     director->setDisplayStats(true);
@@ -34,6 +35,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     searchPaths.push_back(GAME_SCENE_FOLDER_PATH);
     searchPaths.push_back(STAGE_CHOOSER_FOLDER_PATH);
     searchPaths.push_back(BALL_FOLDER_PATH);
+    searchPaths.push_back(JSON_FILE_PATH);
 
     FileUtils::getInstance()->setSearchPaths(searchPaths);
 

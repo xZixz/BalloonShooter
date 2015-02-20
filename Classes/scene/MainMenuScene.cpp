@@ -174,8 +174,11 @@ void MainMenuScene::menuCallback(Ref* sender){
 	int tag = menuItem->getTag();
 	switch (tag){
 	case GATE_BTN_TAG:
-//		Director::getInstance()->replaceScene(GameScene::createScene());
-		Director::getInstance()->replaceScene(UniverseScene::createScene());
+		{
+	//		Director::getInstance()->replaceScene(GameScene::createScene());
+			TransitionFade* white_fade_transition = TransitionFade::create(1.0f, UniverseScene::createScene(), Color3B::WHITE);
+			Director::getInstance()->replaceScene(white_fade_transition);
+		}
 		break;
 	case ENDLESS_BTN_TAG:
 		break;

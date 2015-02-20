@@ -15,7 +15,9 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 				   ../../Classes/manager/BallManager.cpp \
 				   ../../Classes/manager/StageManager.cpp \
 				   ../../Classes/model/Ball.cpp \
+				   ../../Classes/model/FireBall.cpp \
 				   ../../Classes/model/GrowButton.cpp \
+				   ../../Classes/model/GuideDots.cpp \
 				   ../../Classes/model/PlanetBtn.cpp \
 				   ../../Classes/model/Slot.cpp \
 				   ../../Classes/model/StageBtn.cpp \
