@@ -96,6 +96,26 @@ void Ball::installIntoSlot(Slot* slot){
 	slot_->ball_ = this;
 }
 
+void Ball::destroyABall(){
+	if (!booming_){
+		booming_ = true;
+		scheduleOnce(schedule_selector(Ball::endFire),booming_time_);
+	}
+}
+
+void Ball::setBoomingTime(float time){
+	booming_time_ = time;
+}
+
+void Ball::endFire(float time){
+	// TODO
+	if (special_type_ == Ball::SpecialType::SPECIAL_4){ // if it only has fire type then it's done
+		doneShot();
+	} else { // it contains more than just fire type
+		removeSpecialType(Ball::SpecialType::SPECIAL_4) ; // remove fire ball type
+	}
+}
+
 Ball::Ball():
 gamescene_(nullptr),
 slot_(nullptr),
@@ -109,7 +129,9 @@ is_bouncing_(false),
 score_(0),
 special_type_(0),
 g_scene_(nullptr),
-velocity_(1000)
+velocity_(1000),
+booming_(false),
+booming_time_(0.2f)
 {
 	// TODO Auto-generated constructor stub
 

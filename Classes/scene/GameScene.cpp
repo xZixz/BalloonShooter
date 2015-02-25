@@ -7,7 +7,7 @@
 
 #include "GameScene.h"
 #include "../manager/BallManager.h"
-#include "../model/FireBall.h"
+//#include "../model/FireBall.h"
 #include "../scene/MainMenuScene.h"
 #include "../scene/ResultScene.h"
 #include "../GameConstants.h"
@@ -17,9 +17,15 @@
 #define PILLARS_IMAGE_FILE "pillars.png"
 #define DINO_IMAGE_FILE "dino.png"
 
+#define LEAF_BTN_IMAGE_FILE "leaf_skill_btn.png"
+#define ARROW_BTN_IMAGE_FILE "arrow_skill_btn.png"
+#define FLOWER_BTN_IMAGE_FILE "flower_skill_btn.png"
+#define BOOM_BTN_IMAGE_FILE "boom_skill_btn.png"
+
 #define GAME_SCENE_BACK_GROUND_ZORDER 1
 #define PILLARS_ZORDER 2
 #define DINO_ZORDER 3
+#define MENU_ZORDER 8
 
 #define BOOK_ZORDER 7
 #define MAGIC_CIRCLE_ZORDER 9
@@ -31,6 +37,11 @@
 #define BALLS_LEFT_FRAME_ZORDER 7
 #define TIME_LEFT_FRAME_ZORDER 7
 #define DEAD_LINE_ZORDER 7
+
+#define LEAF_SKILL_BTN_TAG 1
+#define ARROW_SKILL_BTN_TAG 2
+#define FLOWER_SKILL_BTN_TAG 3
+#define BOOM_SKILL_BTN_TAG 4
 
 #define BOOK_POS Vec2(480,234)
 #define TOP_WALL_POS Vec2(480,1543)
@@ -48,6 +59,10 @@
 #define PILLARS_POS Vec2(768,1097)
 #define DINO_POS Vec2(804,371)
 #define BALL_READY_POS Vec2(800,394)
+#define LEAF_BTN_POS Vec2(429,84)
+#define ARROW_BTN_POS Vec2(657,84)
+#define FLOWER_BTN_POS Vec2(885,84)
+#define BOOM_BTN_POS Vec2(1113,84)
 
 #define PLAY_SCENE_SIDE_BOUND 50
 #define PLAY_SCENE_TOP_BOUND 115
@@ -119,6 +134,29 @@ bool GameScene::init() {
 		Sprite* dino = Sprite::create(DINO_IMAGE_FILE);
 		dino->setPosition(DINO_POS);
 		addChild(dino,DINO_ZORDER);
+
+		// Buttons
+		Menu* menu = Menu::create();
+		menu->setPosition(Vec2::ZERO);
+		addChild(menu,MENU_ZORDER);
+
+		MenuItemImage* leaf_skill_btn = MenuItemImage::create(LEAF_BTN_IMAGE_FILE,LEAF_BTN_IMAGE_FILE, CC_CALLBACK_1(GameScene::skill_btn_callback,this));
+		MenuItemImage* arrow_skill_btn = MenuItemImage::create(ARROW_BTN_IMAGE_FILE,ARROW_BTN_IMAGE_FILE, CC_CALLBACK_1(GameScene::skill_btn_callback,this));
+		MenuItemImage* flower_skill_btn = MenuItemImage::create(FLOWER_BTN_IMAGE_FILE,FLOWER_BTN_IMAGE_FILE, CC_CALLBACK_1(GameScene::skill_btn_callback,this));
+		MenuItemImage* boom_skill_btn = MenuItemImage::create(BOOM_BTN_IMAGE_FILE,BOOM_BTN_IMAGE_FILE, CC_CALLBACK_1(GameScene::skill_btn_callback,this));
+		leaf_skill_btn->setTag(LEAF_SKILL_BTN_TAG);
+		arrow_skill_btn->setTag(ARROW_SKILL_BTN_TAG);
+		flower_skill_btn->setTag(FLOWER_SKILL_BTN_TAG);
+		boom_skill_btn->setTag(BOOM_SKILL_BTN_TAG);
+		leaf_skill_btn->setPosition(LEAF_BTN_POS);
+		arrow_skill_btn->setPosition(ARROW_BTN_POS);
+		flower_skill_btn->setPosition(FLOWER_BTN_POS);
+		boom_skill_btn->setPosition(BOOM_BTN_POS);
+
+		menu->addChild(leaf_skill_btn);
+		menu->addChild(arrow_skill_btn);
+		menu->addChild(flower_skill_btn);
+		menu->addChild(boom_skill_btn);
 
 		/*
 		 *  Old version
@@ -276,10 +314,10 @@ void GameScene::initialize_balls(){
 }
 
 void GameScene::create_pending_ball(){
-//	std::string random_ball_name = generate_random_ball_name();
-//	pending_ball_ = Ball::create(random_ball_name);
-	pending_ball_ = FireBall::create();
-	pending_ball_->addSpecialType(Ball::SpecialType::SPECIAL_3);
+	std::string random_ball_name = generate_random_ball_name();
+	pending_ball_ = Ball::create(random_ball_name);
+//	pending_ball_ = FireBall::create();
+//	pending_ball_->addSpecialType(Ball::SpecialType::SPECIAL_3);
 	pending_ball_->setPosition(BALL_SPAWN_POS);
 	pending_ball_->setGameScene(this);
 	addChild(pending_ball_,BALL_ZORDER);
@@ -320,13 +358,12 @@ void GameScene::update(float dt) {
 				}
 
 				// if it's a fire-ball, not adjust its position
-//				if (flying_ball_->getSpecialType() | Ball::SpecialType::SPECIAL_4){
 				if (flying_ball_->containSpecialType(Ball::SpecialType::SPECIAL_4)){
 					// TODO
-					FireBall* fire_ball = (FireBall*)flying_ball_;
+//					FireBall* fire_ball = (FireBall*)flying_ball_;
 //					if (flying_ball_->getSpecialType() == Ball::SpecialType::SPECIAL_4){ // ball special 4
 						boomABall(ball);
-						fire_ball->destroyABall();
+						flying_ball_->destroyABall();
 //					}
 //					else if (flying_ball_->getSpecialType() == Ball::SpecialType::SPECIAL_2_4){ // ball special 2 4
 //						boomABall(ball);
@@ -536,7 +573,6 @@ bool GameScene::isPendingBallTouch(Touch* touch){
 
 void GameScene::ballDoneShot(Ball* ball) {
 	stopScanBallCollide();
-//	if (ball->getSpecialType() != Ball::SpecialType::SPECIAL_4){
 	if (!ball->containSpecialType(Ball::SpecialType::SPECIAL_4)){
 		stucking_ball_list_.pushBack(ball);
 	}
@@ -1236,6 +1272,27 @@ void GameScene::showLoseGame(){
 	runAction(Sequence::create(DelayTime::create(1.0f),CallFunc::create([this](){
 		Director::getInstance()->replaceScene(ResultScene::createScene(false,score_,0,stage_));
 	}),nullptr));
+}
+
+void GameScene::skill_btn_callback(Ref* sender){
+	MenuItem* btn = (MenuItem*)sender;
+	int tag = btn->getTag();
+	switch (tag){
+		case LEAF_SKILL_BTN_TAG:
+			ready_ball_->addSpecialType(Ball::SpecialType::SPECIAL_1);
+			break;
+		case ARROW_SKILL_BTN_TAG:
+			ready_ball_->addSpecialType(Ball::SpecialType::SPECIAL_2);
+			break;
+		case FLOWER_SKILL_BTN_TAG:
+			ready_ball_->addSpecialType(Ball::SpecialType::SPECIAL_3);
+			break;
+		case BOOM_SKILL_BTN_TAG:
+			ready_ball_->addSpecialType(Ball::SpecialType::SPECIAL_4);
+			break;
+		default:
+			break;
+	}
 }
 
 GameScene::GameScene() :

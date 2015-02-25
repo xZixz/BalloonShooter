@@ -324,7 +324,6 @@
   jni/../../Classes/scene/../manager/../database/PlanetInfo.h \
   jni/../../Classes/scene/../manager/../database/StageInfo.h \
   jni/../../Classes/scene/../manager/BallManager.h \
-  jni/../../Classes/scene/../model/FireBall.h \
   jni/../../Classes/scene/../scene/MainMenuScene.h \
   jni/../../Classes/scene/../scene/ResultScene.h \
   jni/../../Classes/scene/../GameConstants.h \
@@ -977,8 +976,6 @@ jni/../../Classes/scene/../manager/../database/PlanetInfo.h:
 jni/../../Classes/scene/../manager/../database/StageInfo.h:
 
 jni/../../Classes/scene/../manager/BallManager.h:
-
-jni/../../Classes/scene/../model/FireBall.h:
 
 jni/../../Classes/scene/../scene/MainMenuScene.h:
 

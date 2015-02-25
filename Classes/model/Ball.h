@@ -73,6 +73,9 @@ public:
 		this->g_scene_ = gamescene;
 	}
 
+	GameScene* getGameScene(){
+		return g_scene_;
+	}
 
 	void setSlot(Slot* slot){
 		slot_ = slot;
@@ -102,6 +105,11 @@ public:
 		return special_type_;
 	}
 
+	// Fire ball
+	virtual void destroyABall();
+	virtual void endFire(float time);
+	virtual void setBoomingTime(float time);
+
 protected:
 	std::string name_;
 	Vec2 spawn_pos_;
@@ -116,6 +124,9 @@ protected:
 
 	float score_;
 	float velocity_;
+
+	bool booming_;
+	float booming_time_;
 
 };
 

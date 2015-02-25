@@ -14,6 +14,8 @@ class FireBall : public Ball {
 public:
 
 	static FireBall* create();
+	static FireBall* create(Ball*);
+	virtual bool init(Ball*);
 	virtual bool init();
 
 	FireBall();

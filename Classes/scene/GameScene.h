@@ -114,6 +114,8 @@ public:
 	void showWinGame();
 	void showLoseGame();
 
+	void skill_btn_callback(Ref*);
+
 	// ----------Delegate
 	// Ball Delegate
 	virtual void ballDoneShot(Ball*);

@@ -7,7 +7,7 @@
 
 #include "FireBall.h"
 
-#define FIRE_BALL_NAME "orange"
+#define FIRE_BALL_NAME "green"
 
 FireBall* FireBall::create(){
 	FireBall* fire_ball = new FireBall();
@@ -19,8 +19,26 @@ FireBall* FireBall::create(){
 	return nullptr;
 }
 
+FireBall* FireBall::create(Ball* ball){
+	FireBall* fire_ball = new FireBall();
+	if (fire_ball && fire_ball->init(ball)){
+		fire_ball->autorelease();
+		return fire_ball;
+	}
+	CC_SAFE_DELETE(fire_ball);
+	return nullptr;
+}
+
 bool FireBall::init(){
 	if (Ball::init(FIRE_BALL_NAME)){
+		addSpecialType(Ball::SpecialType::SPECIAL_4);
+		return true;
+	}
+	return false;
+}
+
+bool FireBall::init(Ball* ball){
+	if (Ball::init(ball->getName())){
 		addSpecialType(Ball::SpecialType::SPECIAL_4);
 		return true;
 	}
